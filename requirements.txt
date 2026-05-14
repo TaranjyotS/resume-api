@@ -1,6 +1,0 @@
-Flask
-openai
-Flask-WTF
-transformers
-torch
-werkzeug

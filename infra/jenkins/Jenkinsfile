@@ -1,0 +1,10 @@
+pipeline {
+  agent any
+  stages {
+    stage('Backend install') { steps { sh 'cd backend && python -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt' } }
+    stage('Lint') { steps { sh 'cd backend && . .venv/bin/activate && ruff check app tests' } }
+    stage('Security') { steps { sh 'cd backend && . .venv/bin/activate && bandit -r app -ll' } }
+    stage('Tests') { steps { sh 'cd backend && . .venv/bin/activate && pytest --cov=app --cov-report=term-missing' } }
+    stage('Frontend build') { steps { sh 'cd frontend && npm install && npm run build' } }
+  }
+}

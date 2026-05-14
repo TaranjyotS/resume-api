@@ -1,0 +1,11 @@
+{
+  "info": {"name": "Resume AI Platform", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"},
+  "item": [
+    {"name": "Health", "request": {"method": "GET", "url": "{{baseUrl}}/health"}},
+    {"name": "Register", "request": {"method": "POST", "header": [{"key":"Content-Type","value":"application/json"}], "body": {"mode":"raw", "raw":"{\"email\":\"demo@example.com\",\"password\":\"Password123!\"}"}, "url": "{{baseUrl}}/api/v1/auth/register"}},
+    {"name": "Create Candidate", "request": {"method": "POST", "header": [{"key":"Content-Type","value":"application/json"}], "body": {"mode":"raw", "raw":"{\"full_name\":\"Demo Candidate\",\"target_role\":\"Python Developer\",\"resume_text\":\"Python FastAPI AWS Docker SQL\",\"skills\":\"Python, FastAPI\"}"}, "url": "{{baseUrl}}/api/v1/candidates"}},
+    {"name": "Create Job", "request": {"method": "POST", "header": [{"key":"Content-Type","value":"application/json"}], "body": {"mode":"raw", "raw":"{\"company\":\"DemoCo\",\"title\":\"Backend Developer\",\"description\":\"Python FastAPI AWS SQL Docker APIs\"}"}, "url": "{{baseUrl}}/api/v1/jobs"}},
+    {"name": "Tailor", "request": {"method": "POST", "header": [{"key":"Content-Type","value":"application/json"}], "body": {"mode":"raw", "raw":"{\"candidate_id\":1,\"job_id\":1,\"provider\":\"ollama\"}"}, "url": "{{baseUrl}}/api/v1/ai/tailor"}}
+  ],
+  "variable": [{"key":"baseUrl", "value":"http://localhost:8000"}]
+}

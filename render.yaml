@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: ai-resume-intelligence-api
+    env: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DEFAULT_AI_PROVIDER
+        value: ollama
+      - key: OLLAMA_BASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true

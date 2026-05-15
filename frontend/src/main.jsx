@@ -3,7 +3,9 @@ import { createRoot } from 'react-dom/client';
 import { ArrowLeft, Eye, EyeOff, Loader2, X } from 'lucide-react';
 import './style.css';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
+const API = `${API_BASE_URL}/api/v1`;
 const SESSION_KEY = 'resume_ai_session';
 
 function formatApiError(data, fallback) {

@@ -31,9 +31,13 @@ jobs:
           pip install pytest pytest-cov ruff bandit
 
       - name: Run backend tests
+        env:
+          PYTHONPATH: .
         run: pytest -v --cov=app --cov-report=term-missing
 
       - name: Run backend lint
+        env:
+          PYTHONPATH: .
         run: ruff check app tests
 
       - name: Run backend security scan

@@ -18,7 +18,7 @@ def _safe_json(raw: str) -> dict:
         return {"raw_generation": raw}
 
 def _bullets_from_resume(resume: str) -> str:
-    lines = [l.strip() for l in resume.splitlines() if len(l.strip()) > 20]
+    lines = [line.strip() for line in resume.splitlines() if len(line.strip()) > 20]
     bullets = lines[:8] or ["Built scalable software systems and delivered measurable engineering outcomes."]
     return "\n".join(f"• {b}" for b in bullets)
 
@@ -53,9 +53,9 @@ def _tailored_resume_preserving_format(candidate: Candidate, job: JobDescription
         + "PROFESSIONAL SUMMARY\n"
         + f"Software Engineer with 5+ years of experience tailored for {role} roles, combining backend engineering, API design, cloud-native development, CI/CD automation, testing, and production support. Experienced in building reliable, scalable, and maintainable systems while translating business requirements into secure software solutions. This ATS-focused version preserves the candidate's original resume structure while strengthening alignment with job keywords such as {keywords}.\n\n"
         + "TECHNICAL SKILLS\n"
-        + f"Programming & Backend: Python, FastAPI, Flask, REST APIs, JavaScript/TypeScript, Node.js\n"
-        + f"Cloud & DevOps: AWS, Docker, Kubernetes, Jenkins, CI/CD, Git, observability, production support\n"
-        + f"Databases & Data: SQL, NoSQL, data pipelines, reporting, performance optimization\n"
+        + "Programming & Backend: Python, FastAPI, Flask, REST APIs, JavaScript/TypeScript, Node.js\n"
+        + "Cloud & DevOps: AWS, Docker, Kubernetes, Jenkins, CI/CD, Git, observability, production support\n"
+        + "Databases & Data: SQL, NoSQL, data pipelines, reporting, performance optimization\n"
         + f"Role Keywords: {keywords}\n\n"
         + "PROFESSIONAL EXPERIENCE\n"
         + experience_bullets
@@ -74,7 +74,6 @@ def _tailored_resume_preserving_format(candidate: Candidate, job: JobDescription
 def _local_fallback_package(candidate: Candidate, job: JobDescription, missing: list[str]) -> dict:
     keywords = ", ".join(missing[:18]) if missing else "the job's core technical keywords"
     role = infer_job_title(job.description)
-    resume_excerpt = candidate.resume_text.strip()[:3500]
     return {
         "ats_friendly_resume": _tailored_resume_preserving_format(candidate, job, missing),
         "cover_letter": (
@@ -161,12 +160,16 @@ async def tailor(payload: TailorRequest, db: Session = Depends(get_db)):
         "provider_error": provider_error,
     }
     result = GenerationResult(candidate_id=candidate.id, job_id=job.id, provider=provider_name, model=payload.model or "default", ats_score=current_score, improved_ats_score=improved_score, output_json=json.dumps(output))
-    db.add(result); db.commit(); db.refresh(result)
+    db.add(result)
+    db.commit()
+    db.refresh(result)
 
     application_log_id = None
     if payload.create_application_log:
         summary = f"Full tailored package saved: resume, cover letter, recruiter email, LinkedIn message, interview questions, links. Uploaded ATS {current_score}; projected tailored ATS {improved_score}; keyword match {key_score}."
         log = ApplicationLog(candidate_id=candidate.id, job_id=job.id, result_id=result.id, company=job.company or "Company not specified", title=job.title or "Target Role", status="draft", summary=summary, notes="Generated tailored package")
-        db.add(log); db.commit(); db.refresh(log)
+        db.add(log)
+        db.commit()
+        db.refresh(log)
         application_log_id = log.id
     return {"result_id": result.id, "application_log_id": application_log_id, **output}

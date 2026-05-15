@@ -10,7 +10,9 @@ router = APIRouter(prefix="/applications", tags=["applications"])
 @router.post("")
 def create_application(payload: dict, db: Session = Depends(get_db)):
     row = ApplicationLog(**payload)
-    db.add(row); db.commit(); db.refresh(row)
+    db.add(row)
+    db.commit()
+    db.refresh(row)
     return row
 
 
@@ -47,5 +49,6 @@ def update_application(application_id: int, payload: ApplicationUpdate, db: Sess
         raise HTTPException(status_code=404, detail="Application log not found")
     for key, value in payload.model_dump(exclude_unset=True).items():
         setattr(row, key, value)
-    db.commit(); db.refresh(row)
+    db.commit()
+    db.refresh(row)
     return row
